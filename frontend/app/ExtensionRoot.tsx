@@ -155,8 +155,27 @@ export default function ExtensionRoot() {
     );
   }
 
+  // Get background color from puck data
+  const rootProps = puckData?.root?.props || {};
+  const backgroundColor = rootProps.backgroundColor || 'white';
+  const colors = rootProps.colors || {};
+  
+  const colorMap: Record<string, string> = {
+    white: '#ffffff',
+    color1: colors.color1 || '#1d4ed8',
+    color2: colors.color2 || '#059669',
+    color3: colors.color3 || '#dc2626',
+    color4: colors.color4 || '#d97706',
+    color5: colors.color5 || '#7c3aed',
+    color6: colors.color6 || '#0891b2',
+    color7: colors.color7 || '#db2777',
+    color8: colors.color8 || '#65a30d',
+  };
+
+  const bgColor = colorMap[backgroundColor] || '#f9fafb';
+
   return (
-    <div className="min-h-screen bg-gray-gray50 dark:bg-gray-gray800">
+    <div className="min-h-screen" style={{ backgroundColor: bgColor }}>
       <Puck config={config} data={puckData} onPublish={handlePuckPublish} />
     </div>
   );

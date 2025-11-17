@@ -5,7 +5,7 @@ export type TextProps = {
   size: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl';
   weight: 'normal' | 'medium' | 'semibold' | 'bold';
   align: 'left' | 'center' | 'right';
-  color: 'default' | 'gray' | 'blue' | 'green' | 'red' | 'yellow' | 'purple';
+  color: 'black' | 'white' | 'color1' | 'color2' | 'color3' | 'color4' | 'color5' | 'color6' | 'color7' | 'color8';
 };
 
 const Text: ComponentConfig<TextProps> = {
@@ -53,13 +53,16 @@ const Text: ComponentConfig<TextProps> = {
       type: 'select',
       label: 'Text Color',
       options: [
-        { label: 'Default', value: 'default' },
-        { label: 'Gray', value: 'gray' },
-        { label: 'Blue', value: 'blue' },
-        { label: 'Green', value: 'green' },
-        { label: 'Red', value: 'red' },
-        { label: 'Yellow', value: 'yellow' },
-        { label: 'Purple', value: 'purple' },
+        { label: 'Black', value: 'black' },
+        { label: 'White', value: 'white' },
+        { label: 'Color 1', value: 'color1' },
+        { label: 'Color 2', value: 'color2' },
+        { label: 'Color 3', value: 'color3' },
+        { label: 'Color 4', value: 'color4' },
+        { label: 'Color 5', value: 'color5' },
+        { label: 'Color 6', value: 'color6' },
+        { label: 'Color 7', value: 'color7' },
+        { label: 'Color 8', value: 'color8' },
       ],
     },
   },
@@ -68,9 +71,9 @@ const Text: ComponentConfig<TextProps> = {
     size: 'base',
     weight: 'normal',
     align: 'left',
-    color: 'default',
+    color: 'black',
   },
-  render: ({ content, size, weight, align, color }) => {
+  render: ({ content, size, weight, align, color, puck }) => {
     const sizeClasses = {
       xs: 'text-xs',
       sm: 'text-sm',
@@ -97,20 +100,31 @@ const Text: ComponentConfig<TextProps> = {
       right: 'text-right',
     };
 
-    const colorClasses = {
-      default: 'text-gray-gray900 dark:text-gray-gray100',
-      gray: 'text-gray-gray600 dark:text-gray-gray400',
-      blue: 'text-blue-blue dark:text-blue-blueLight1',
-      green: 'text-green-green dark:text-green-greenLight1',
-      red: 'text-red-red dark:text-red-redLight1',
-      yellow: 'text-yellow-yellowDark1 dark:text-yellow-yellowLight1',
-      purple: 'text-purple-purple dark:text-purple-purpleLight1',
+    // Get colors from root props
+    const rootProps = (puck as any)?.appState?.data?.root?.props || {};
+    const paletteColors = rootProps.colors || {};
+
+    // Map color references to hex values
+    const colorMap: Record<string, string> = {
+      white: '#ffffff',
+      black: '#000000',
+      color1: paletteColors.color1 || '#1d4ed8',
+      color2: paletteColors.color2 || '#059669',
+      color3: paletteColors.color3 || '#dc2626',
+      color4: paletteColors.color4 || '#d97706',
+      color5: paletteColors.color5 || '#7c3aed',
+      color6: paletteColors.color6 || '#0891b2',
+      color7: paletteColors.color7 || '#db2777',
+      color8: paletteColors.color8 || '#65a30d',
     };
+
+    const textColor = colorMap[color] || '#000000';
 
     return (
       <div className="p-4 bg-white dark:bg-gray-gray700 rounded-lg">
         <p
-          className={`${sizeClasses[size]} ${weightClasses[weight]} ${alignClasses[align]} ${colorClasses[color]} whitespace-pre-wrap`}
+          className={`${sizeClasses[size]} ${weightClasses[weight]} ${alignClasses[align]} whitespace-pre-wrap`}
+          style={{ color: textColor }}
         >
           {content}
         </p>

@@ -4,7 +4,8 @@ export type HeroProps = {
   headline: string;
   subhead: string;
   backgroundUrl?: string;
-  backgroundColor: 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'gray' | 'cyan' | 'teal' | 'orange' | 'pink';
+  backgroundColor: 'color1' | 'color2' | 'color3' | 'color4' | 'color5' | 'color6' | 'color7' | 'color8' | 'transparent';
+  textColor: 'color1' | 'color2' | 'color3' | 'color4' | 'color5' | 'color6' | 'color7' | 'color8' | 'white' | 'black';
   alignment: 'left' | 'center' | 'right';
 };
 
@@ -26,16 +27,31 @@ const Hero: ComponentConfig<HeroProps> = {
       type: 'select',
       label: 'Background Color',
       options: [
-        { label: 'Blue', value: 'blue' },
-        { label: 'Green', value: 'green' },
-        { label: 'Red', value: 'red' },
-        { label: 'Yellow', value: 'yellow' },
-        { label: 'Purple', value: 'purple' },
-        { label: 'Gray', value: 'gray' },
-        { label: 'Cyan', value: 'cyan' },
-        { label: 'Teal', value: 'teal' },
-        { label: 'Orange', value: 'orange' },
-        { label: 'Pink', value: 'pink' },
+        { label: 'Transparent', value: 'transparent' },
+        { label: 'Color 1', value: 'color1' },
+        { label: 'Color 2', value: 'color2' },
+        { label: 'Color 3', value: 'color3' },
+        { label: 'Color 4', value: 'color4' },
+        { label: 'Color 5', value: 'color5' },
+        { label: 'Color 6', value: 'color6' },
+        { label: 'Color 7', value: 'color7' },
+        { label: 'Color 8', value: 'color8' },
+      ],
+    },
+    textColor: {
+      type: 'select',
+      label: 'Text Color',
+      options: [
+        { label: 'White', value: 'white' },
+        { label: 'Black', value: 'black' },
+        { label: 'Color 1', value: 'color1' },
+        { label: 'Color 2', value: 'color2' },
+        { label: 'Color 3', value: 'color3' },
+        { label: 'Color 4', value: 'color4' },
+        { label: 'Color 5', value: 'color5' },
+        { label: 'Color 6', value: 'color6' },
+        { label: 'Color 7', value: 'color7' },
+        { label: 'Color 8', value: 'color8' },
       ],
     },
     alignment: {
@@ -51,29 +67,38 @@ const Hero: ComponentConfig<HeroProps> = {
   defaultProps: {
     headline: 'Welcome to Your Page',
     subhead: 'Build amazing interfaces with Puck and Airtable',
-    backgroundColor: 'blue',
+    backgroundColor: 'color1',
+    textColor: 'white',
     alignment: 'center',
   },
-  render: ({ headline, subhead, backgroundUrl, backgroundColor, alignment }) => {
+  render: ({ headline, subhead, backgroundUrl, backgroundColor, textColor, alignment, puck }) => {
     const alignmentClasses = {
       left: 'text-left',
       center: 'text-center',
       right: 'text-right',
     };
 
-    // Map color names to Airtable's color values
-    const colorMap = {
-      blue: 'rgb(22, 110, 225)',
-      green: 'rgb(4, 138, 14)',
-      red: 'rgb(220, 4, 59)',
-      yellow: 'rgb(255, 186, 5)',
-      purple: 'rgb(124, 55, 239)',
-      gray: 'rgb(97, 102, 112)',
-      cyan: 'rgb(57, 202, 255)',
-      teal: 'rgb(1, 221, 213)',
-      orange: 'rgb(213, 68, 1)',
-      pink: 'rgb(221, 4, 168)',
+    // Get colors from root props (puck.appState.data.root.props.colors)
+    const rootProps = (puck as any)?.appState?.data?.root?.props || {};
+    const paletteColors = rootProps.colors || {};
+
+    // Map color references to hex values
+    const colorMap: Record<string, string> = {
+      transparent: 'transparent',
+      white: '#ffffff',
+      black: '#000000',
+      color1: paletteColors.color1 || '#1d4ed8',
+      color2: paletteColors.color2 || '#059669',
+      color3: paletteColors.color3 || '#dc2626',
+      color4: paletteColors.color4 || '#d97706',
+      color5: paletteColors.color5 || '#7c3aed',
+      color6: paletteColors.color6 || '#0891b2',
+      color7: paletteColors.color7 || '#db2777',
+      color8: paletteColors.color8 || '#65a30d',
     };
+
+    const bgColor = colorMap[backgroundColor] || '#1d4ed8';
+    const txtColor = colorMap[textColor] || '#ffffff';
 
     return (
       <section
@@ -82,12 +107,24 @@ const Hero: ComponentConfig<HeroProps> = {
           backgroundImage: backgroundUrl ? `url(${backgroundUrl})` : undefined,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundColor: backgroundUrl ? undefined : colorMap[backgroundColor],
+          backgroundColor: backgroundUrl ? undefined : bgColor,
         }}
       >
         <div className="relative z-10 w-full">
-          <h1 className="text-5xl font-bold text-white mb-4 drop-shadow-lg">{headline}</h1>
-          {subhead && <p className="text-xl text-white opacity-90 drop-shadow-md">{subhead}</p>}
+          <h1 
+            className="text-5xl font-bold mb-4 drop-shadow-lg" 
+            style={{ color: txtColor }}
+          >
+            {headline}
+          </h1>
+          {subhead && (
+            <p 
+              className="text-xl opacity-90 drop-shadow-md" 
+              style={{ color: txtColor }}
+            >
+              {subhead}
+            </p>
+          )}
         </div>
         {backgroundUrl && <div className="absolute inset-0 bg-black opacity-30 rounded-lg" />}
       </section>
