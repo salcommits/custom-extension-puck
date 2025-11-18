@@ -71,34 +71,33 @@ const Hero: ComponentConfig<HeroProps> = {
     textColor: 'white',
     alignment: 'center',
   },
-  render: ({ headline, subhead, backgroundUrl, backgroundColor, textColor, alignment, puck }) => {
+  render: ({ headline, subhead, backgroundUrl, backgroundColor, textColor, alignment }) => {
     const alignmentClasses = {
       left: 'text-left',
       center: 'text-center',
       right: 'text-right',
     };
 
-    // Get colors from root props (puck.appState.data.root.props.colors)
-    const rootProps = (puck as any)?.appState?.data?.root?.props || {};
-    const paletteColors = rootProps.colors || {};
-
-    // Map color references to hex values
-    const colorMap: Record<string, string> = {
-      transparent: 'transparent',
-      white: '#ffffff',
-      black: '#000000',
-      color1: paletteColors.color1 || '#1d4ed8',
-      color2: paletteColors.color2 || '#059669',
-      color3: paletteColors.color3 || '#dc2626',
-      color4: paletteColors.color4 || '#d97706',
-      color5: paletteColors.color5 || '#7c3aed',
-      color6: paletteColors.color6 || '#0891b2',
-      color7: paletteColors.color7 || '#db2777',
-      color8: paletteColors.color8 || '#65a30d',
+    // Map color references to CSS custom properties or fixed colors
+    const getColor = (colorRef: string): string => {
+      const colorVarMap: Record<string, string> = {
+        color1: 'var(--color-1, #1d4ed8)',
+        color2: 'var(--color-2, #059669)',
+        color3: 'var(--color-3, #dc2626)',
+        color4: 'var(--color-4, #d97706)',
+        color5: 'var(--color-5, #7c3aed)',
+        color6: 'var(--color-6, #0891b2)',
+        color7: 'var(--color-7, #db2777)',
+        color8: 'var(--color-8, #65a30d)',
+        transparent: 'transparent',
+        white: '#ffffff',
+        black: '#000000',
+      };
+      return colorVarMap[colorRef] || '#1d4ed8';
     };
 
-    const bgColor = colorMap[backgroundColor] || '#1d4ed8';
-    const txtColor = colorMap[textColor] || '#ffffff';
+    const bgColor = getColor(backgroundColor);
+    const txtColor = getColor(textColor);
 
     return (
       <section

@@ -1,5 +1,6 @@
 import type { Config } from '@measured/puck';
 import type { Base } from '@airtable/blocks/interface/models';
+import type React from 'react';
 import Hero from './components/Hero';
 import Columns from './components/Columns';
 import Text from './components/Text';
@@ -140,6 +141,25 @@ export function createConfig(base: Base): Config {
           color8: '#65a30d',
         },
         backgroundColor: 'white',
+      },
+      render: ({ children, colors }) => {
+        // Inject colors as CSS custom properties so all components can access them
+        const style = {
+          '--color-1': colors?.color1 || '#1d4ed8',
+          '--color-2': colors?.color2 || '#059669',
+          '--color-3': colors?.color3 || '#dc2626',
+          '--color-4': colors?.color4 || '#d97706',
+          '--color-5': colors?.color5 || '#7c3aed',
+          '--color-6': colors?.color6 || '#0891b2',
+          '--color-7': colors?.color7 || '#db2777',
+          '--color-8': colors?.color8 || '#65a30d',
+        } as React.CSSProperties;
+
+        return (
+          <div style={style}>
+            {children}
+          </div>
+        );
       },
     },
   };
